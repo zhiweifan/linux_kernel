@@ -1,0 +1,165 @@
+From 903903ba21ac117409a9b00afb08e7fb5be1fcd3 Mon Sep 17 00:00:00 2001
+From: fanzhiwei <fanzhiwei@ruijie.com.cn>
+Date: Fri, 11 Aug 2017 18:55:18 +0800
+Subject: [PATCH] Summary:fix slabinfo for @@@@m
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+BranchName: kernel-cn7xxx
+CAFID: N20170810163
+BUGID: 374372
+WorkPackageName: rgosm-build
+The ratio of self research code(0~1):
+
+@@@@m在内存不足情况下可用
+---
+ mm/slab.c | 135 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 135 insertions(+)
+
+diff --git a/mm/slab.c b/mm/slab.c
+index bd88411..64e667b 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -4504,3 +4504,138 @@ size_t ksize(const void *objp)
+ 	return virt_to_cache(objp)->object_size;
+ }
+ EXPORT_SYMBOL(ksize);
++
++#ifdef CONFIG_SLABINFO
++
++static void lmk_print_slabinfo_header(void)
++{
++	/*
++	 * Output format version, so at least we can change it
++	 * without _too_ many complaints.
++	 */
++#ifdef CONFIG_DEBUG_SLAB
++	printk(KERN_EMERG "slabinfo - version: 2.1 (statistics)\n");
++#else
++	printk(KERN_EMERG "slabinfo - version: 2.1 \n");
++#endif
++	printk(KERN_EMERG "# name            <active_objs> <num_objs> <objsize> "
++		"<objperslab> <pagesperslab>"
++		" : tunables <limit> <batchcount> <sharedfactor>"
++		" : slabdata <active_slabs> <num_slabs> <sharedavail>\n");
++#ifdef CONFIG_DEBUG_SLAB
++		printk(KERN_EMERG " : globalstat <listallocs> <maxobjs> <grown> <reaped> "
++		"<error> <maxfreeable> <nodeallocs> <remotefrees> <alienoverflow>\n");
++		printk(KERN_EMERG " : cpustat <allochit> <allocmiss> <freehit> <freemiss>\n");
++#ifdef CONFIG_PAX_MEMORY_SANITIZE
++		printk(KERN_EMERG " : pax <sanitized> <not_sanitized>\n");
++#endif
++#endif
++}
++
++static void lmk_memcg_accumulate_slabinfo(struct kmem_cache *s, struct slabinfo *info)
++{
++	struct kmem_cache *c;
++	struct slabinfo sinfo;
++	int i;
++
++	if (!is_root_cache(s))
++	return;
++
++	for_each_memcg_cache_index(i) {
++		c = cache_from_memcg(s, i);
++		if (!c)
++			continue;
++
++		memset(&sinfo, 0, sizeof(sinfo));
++		get_slabinfo(c, &sinfo);
++
++		info->active_slabs += sinfo.active_slabs;
++		info->num_slabs += sinfo.num_slabs;
++		info->shared_avail += sinfo.shared_avail;
++		info->active_objs += sinfo.active_objs;
++		info->num_objs += sinfo.num_objs;
++	}
++}
++
++static void lmk_slabinfo_show_stats(struct kmem_cache *cachep)
++{
++#if STATS
++	{           /* node stats */
++		unsigned long high = cachep->high_mark;
++		unsigned long allocs = cachep->num_allocations;
++		unsigned long grown = cachep->grown;
++		unsigned long reaped = cachep->reaped;
++		unsigned long errors = cachep->errors;
++		unsigned long max_freeable = cachep->max_freeable;
++		unsigned long node_allocs = cachep->node_allocs;
++		unsigned long node_frees = cachep->node_frees;
++		unsigned long overflows = cachep->node_overflow;
++
++		printk(KERN_EMERG " : globalstat %7lu %6lu %5lu %4lu "
++			"%4lu %4lu %4lu %4lu %4lu\n",
++			allocs, high, grown,
++			reaped, errors, max_freeable, node_allocs,
++			node_frees, overflows);
++	}
++	/* cpu stats */
++	{
++		unsigned long allochit = atomic_read_unchecked(&cachep->allochit);
++		unsigned long allocmiss = atomic_read_unchecked(&cachep->allocmiss);
++		unsigned long freehit = atomic_read_unchecked(&cachep->freehit);
++		unsigned long freemiss = atomic_read_unchecked(&cachep->freemiss);
++
++		printk(KERN_EMERG " : cpustat %6lu %6lu %6lu %6lu\n",
++			allochit, allocmiss, freehit, freemiss);
++	}
++#ifdef CONFIG_PAX_MEMORY_SANITIZE
++	{
++		unsigned long sanitized = atomic_read_unchecked(&cachep->sanitized);
++		unsigned long not_sanitized = atomic_read_unchecked(&cachep->not_sanitized);
++
++		printk(KERN_EMERG " : pax %6lu %6lu\n", sanitized, not_sanitized);
++	}
++#endif
++#endif
++}
++
++static int lmk_cache_show(struct kmem_cache *s)
++{
++	struct slabinfo sinfo;
++
++	memset(&sinfo, 0, sizeof(sinfo));
++	get_slabinfo(s, &sinfo);
++
++	lmk_memcg_accumulate_slabinfo(s, &sinfo);
++
++	printk(KERN_EMERG "%-17s %6lu %6lu %6u %4u %4d"
++		" : tunables %4u %4u %4u"
++		" : slabdata %6lu %6lu %6lu\n",
++		cache_name(s), sinfo.active_objs, sinfo.num_objs, s->size,
++		sinfo.objects_per_slab, (1 << sinfo.cache_order),
++		sinfo.limit, sinfo.batchcount, sinfo.shared,
++		sinfo.active_slabs, sinfo.num_slabs, sinfo.shared_avail);
++
++	lmk_slabinfo_show_stats(s);
++
++	return 0;
++}
++
++void lmk_dump_proc_slabinfo(void)
++{
++	struct kmem_cache *s;
++
++	mutex_lock(&slab_mutex);
++
++	lmk_print_slabinfo_header();
++
++	list_for_each_entry(s, &slab_caches, list) {
++		if (!is_root_cache(s))
++			continue;
++		(void) lmk_cache_show(s);
++	}
++
++	mutex_unlock(&slab_mutex);
++}
++EXPORT_SYMBOL_GPL(lmk_dump_proc_slabinfo);
++
++#endif /* CONFIG_SLABINFO */
+-- 
+1.9.1
+

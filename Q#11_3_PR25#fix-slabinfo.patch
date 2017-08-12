@@ -1,0 +1,38 @@
+From 52757dbfd29cc9014e26a5ed2bcd5db5a9279f70 Mon Sep 17 00:00:00 2001
+From: fanzhiwei <fanzhiwei@ruijie.com.cn>
+Date: Fri, 11 Aug 2017 18:58:36 +0800
+Subject: [PATCH] Summary:fix slabinfo for @@@@m
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+BranchName: 11_3_PR25
+CAFID: N20170810163
+BUGID: 374372
+WorkPackageName:
+The ratio of self research code(0~1):
+
+4@m在内存不足情况下可用
+---
+ rootfs/rootfs-common/pkg_kconfig/315-utils.kconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/rootfs/rootfs-common/pkg_kconfig/315-utils.kconfig b/rootfs/rootfs-common/pkg_kconfig/315-utils.kconfig
+index df56d0c..7f6778b 100755
+--- a/rootfs/rootfs-common/pkg_kconfig/315-utils.kconfig
++++ b/rootfs/rootfs-common/pkg_kconfig/315-utils.kconfig
+@@ -246,6 +246,11 @@ config KCONFIG_proc_info
+     bool "proc_info"
+     default y
+ 
++config CONFIG_SLAB_PROC_INFO_EXPORT
++	depends CFG_UTILS
++	bool "SLAB_PROC_INFO_EXPORT"
++	default y
++
+ config KCONFIG_tree
+ 	bool "tree"
+ 	depends CFG_UTILS
+-- 
+1.9.1
+

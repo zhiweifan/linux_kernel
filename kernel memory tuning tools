@@ -1,0 +1,563 @@
+What:		/sys/kernel/slab
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The /sys/kernel/slab directory contains a snapshot of the
+		internal state of the SLUB allocator for each cache.  Certain
+		files may be modified to change the behavior of the cache (and
+		any cache it aliases, if any).
+		/sys/kernel/slab目录包含每个缓存的SLUB分配器的内部状态的快照。某些文件可能被修改以改变缓存（以及任何其它别名的高速缓存）的行为。
+		
+Users:		kernel memory tuning tools
+			内核内存调优工具
+
+What:		/sys/kernel/slab/cache/aliases
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The aliases file is read-only and specifies how many caches
+		have merged into this cache.
+		别名文件是只读的，并指定多少个高速缓存已合并到此缓存中。
+
+What:		/sys/kernel/slab/cache/align
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The align file is read-only and specifies the cache's object
+		alignment in bytes.
+		对齐文件是只读的，并以字节为单位指定高速缓存的对象对齐方式。
+
+What:		/sys/kernel/slab/cache/alloc_calls
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The alloc_calls file is read-only and lists the kernel code
+		locations from which allocations for this cache were performed.
+		The alloc_calls file only contains information if debugging is
+		enabled for that cache (see Documentation/vm/slub.txt).
+		alloc_calls文件是只读的，并列出执行此缓存的分配的内核代码位置。 如果为该缓存启用了调试，则alloc_calls文件才会包含此信息（请参阅Documentation/vm/slub.txt）。
+
+What:		/sys/kernel/slab/cache/alloc_fastpath
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The alloc_fastpath file shows how many objects have been
+		allocated using the fast path.  It can be written to clear the
+		current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		alloc_fastpath文件显示使用快速路径分配了多少对象。 可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/alloc_from_partial
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The alloc_from_partial file shows how many times a cpu slab has
+		been full and it has been refilled by using a slab from the list
+		of partially used slabs.  It can be written to clear the current
+		count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		alloc_from_partial文件显示了cpu slab已经满了多少次，并且已经通过使用部分使用的slab list中的slab进行重新填充。可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/alloc_refill
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The alloc_refill file shows how many times the per-cpu freelist
+		was empty but there were objects available as the result of
+		remote cpu frees.  It can be written to clear the current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		alloc_refill文件显示每个cpu freelist为空的次数，但remote cpu释放，才有可用的对象。可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/alloc_slab
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The alloc_slab file is shows how many times a new slab had to
+		be allocated from the page allocator.  It can be written to
+		clear the current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		alloc_slab文件显示了一个新的slab必须从page allocator分配多少次。可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/alloc_slowpath
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The alloc_slowpath file shows how many objects have been
+		allocated using the slow path because of a refill or
+		allocation from a partial or new slab.  It can be written to
+		clear the current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		alloc_slowpath文件显示由于部分或全新的slab的重新填充或分配，使用slowpath分配对象的数量。可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/cache_dma
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The cache_dma file is read-only and specifies whether objects
+		are from ZONE_DMA.
+		Available when CONFIG_ZONE_DMA is enabled.
+		cache_dma文件是只读的，指定objects是否来自ZONE_DMA。
+		启用CONFIG_ZONE_DMA时可用。
+
+What:		/sys/kernel/slab/cache/cpu_slabs
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The cpu_slabs file is read-only and displays how many cpu slabs
+		are active and their NUMA locality.
+		cpu_slabs文件是只读的，显示有多少cpu slabs是active的以及它们的NUMA位置。
+
+What:		/sys/kernel/slab/cache/cpuslab_flush
+Date:		April 2009
+KernelVersion:	2.6.31
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The file cpuslab_flush shows how many times a cache's cpu slabs
+		have been flushed as the result of destroying or shrinking a
+		cache, a cpu going offline, or as the result of forcing an
+		allocation from a certain node.  It can be written to clear the
+		current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		文件cpuslab_flush显示了由于破坏或缩小缓存，cpu脱机或强制从某个节点分配的结果，高速缓存的cpu slab被刷新了多少次。 可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/ctor
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The ctor file is read-only and specifies the cache's object
+		constructor function, which is invoked for each object when a
+		new slab is allocated.
+		ctor文件是只读的，并指定缓存的对象构造函数，当分配新的slab时，它将被每个object调用。
+
+What:		/sys/kernel/slab/cache/deactivate_empty
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The deactivate_empty file shows how many times an empty cpu slab
+		was deactivated.  It can be written to clear the current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		deactivate_empty文件显示空cpu slab被停用的次数。可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/deactivate_full
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The deactivate_full file shows how many times a full cpu slab
+		was deactivated.  It can be written to clear the current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		deactivate_full文件显示完整cpu slab被停用的次数。可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/deactivate_remote_frees
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The deactivate_remote_frees file shows how many times a cpu slab
+		has been deactivated and contained free objects that were freed
+		remotely.  It can be written to clear the current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		deactivate_remote_frees文件显示了cpu slab已被停用多少次，并且包含远程释放的自由对象。可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/deactivate_to_head
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The deactivate_to_head file shows how many times a partial cpu
+		slab was deactivated and added to the head of its node's partial
+		list.  It can be written to clear the current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		deactivate_to_head文件显示部分cpu slab被停用并添加到其节点的部分列表的头部的次数。可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/deactivate_to_tail
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The deactivate_to_tail file shows how many times a partial cpu
+		slab was deactivated and added to the tail of its node's partial
+		list.  It can be written to clear the current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		deactivate_to_tail文件显示部分cpu slab被停用多少次，并将其添加到其节点的部分列表的尾部。可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/destroy_by_rcu
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The destroy_by_rcu file is read-only and specifies whether
+		slabs (not objects) are freed by rcu.
+		destroy_by_rcu文件是只读的，指定是否通过rcu释放slabs（而不是对象）。
+
+What:		/sys/kernel/slab/cache/free_add_partial
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The free_add_partial file shows how many times an object has
+		been freed in a full slab so that it had to added to its node's
+		partial list.  It can be written to clear the current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		free_add_partial文件显示了一个对象在完整slab中被释放的次数，以便它被添加到其节点的部分列表中。可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/free_calls
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The free_calls file is read-only and lists the locations of
+		object frees if slab debugging is enabled (see
+		Documentation/vm/slub.txt).
+		free_calls文件是只读的，如果启用了slab调试，则列出对象释放的位置（请参阅Documentation/vm/slub.txt）。
+
+What:		/sys/kernel/slab/cache/free_fastpath
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The free_fastpath file shows how many objects have been freed
+		using the fast path because it was an object from the cpu slab.
+		It can be written to clear the current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		free_fastpath文件显示使用快速路径释放了多少对象，因为它是来自cpu slab的一个对象。它可以被写入以清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/free_frozen
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The free_frozen file shows how many objects have been freed to
+		a frozen slab (i.e. a remote cpu slab).  It can be written to
+		clear the current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		free_frozen文件显示已经释放到frozen slab（即remote cpu slab）的对象数量。可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/free_remove_partial
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The free_remove_partial file shows how many times an object has
+		been freed to a now-empty slab so that it had to be removed from
+		its node's partial list.  It can be written to clear the current
+		count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		free_remove_partial文件显示一个对象已被释放到现在为空的slab的次数，以便它必须从其节点的部分列表中删除。可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/free_slab
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The free_slab file shows how many times an empty slab has been
+		freed back to the page allocator.  It can be written to clear
+		the current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		free_slab文件显示一个空的slab已经释放回页面分配器的次数。可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/free_slowpath
+Date:		February 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The free_slowpath file shows how many objects have been freed
+		using the slow path (i.e. to a full or partial slab).  It can
+		be written to clear the current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		free_slowpath文件显示使用慢速路径（即完整或部分slab）释放了多少对象。可以写入清除当前计数。
+		启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/hwcache_align
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The hwcache_align file is read-only and specifies whether
+		objects are aligned on cachelines.
+		hwcache_align文件是只读的，指定对象是否在高速缓存行上对齐。
+
+What:		/sys/kernel/slab/cache/min_partial
+Date:		February 2009
+KernelVersion:	2.6.30
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		David Rientjes <rientjes@google.com>
+Description:
+		The min_partial file specifies how many empty slabs shall
+		remain on a node's partial list to avoid the overhead of
+		allocating new slabs.  Such slabs may be reclaimed by utilizing
+		the shrink file.
+		min_partial文件指定在节点的部分列表中保留多少个空格，以避免分配新的slab的开销。这样的slab可以通过利用shrink file来回收。
+
+What:		/sys/kernel/slab/cache/object_size
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The object_size file is read-only and specifies the cache's
+		object size.
+		object_size文件是只读的，并指定缓存的对象大小。
+
+What:		/sys/kernel/slab/cache/objects
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The objects file is read-only and displays how many objects are
+		active and from which nodes they are from.
+		objects文件是只读的，并显示有多少对象是active的，以及来自哪个节点。
+
+What:		/sys/kernel/slab/cache/objects_partial
+Date:		April 2008
+KernelVersion:	2.6.26
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The objects_partial file is read-only and displays how many
+		objects are on partial slabs and from which nodes they are
+		from.
+		objects_partial文件是只读的，并显示部分slabs上的对象数量以及来自哪些节点。
+
+What:		/sys/kernel/slab/cache/objs_per_slab
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The file objs_per_slab is read-only and specifies how many
+		objects may be allocated from a single slab of the order
+		specified in /sys/kernel/slab/cache/order.
+		objs_per_slab文件是只读的，并指定可以从/sys/kernel/slab/cache/order中指定顺序的单个slab中分配多少个对象。
+
+What:		/sys/kernel/slab/cache/order
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The order file specifies the page order at which new slabs are
+		allocated.  It is writable and can be changed to increase the
+		number of objects per slab.  If a slab cannot be allocated
+		because of fragmentation, SLUB will retry with the minimum order
+		possible depending on its characteristics.
+		When debug_guardpage_minorder=N (N > 0) parameter is specified
+		(see Documentation/admin-guide/kernel-parameters.rst), the minimum possible
+		order is used and this sysfs entry can not be used to change
+		the order at run time.
+		order文件指定分配新slab的page order。它是可写的，可以更改，以增加每个slab的对象数量。
+		如果由于碎片而无法分配slab，则SLUB将根据其特性以最小顺序重试。
+		当指定了debug_guardpage_minorder = N（N> 0）参数（请参阅Documentation / admin-guide / kernel-parameters.rst）时，
+		使用最小可能的order，并且此sysfs条目不能用于在运行时更改顺序。
+
+What:		/sys/kernel/slab/cache/order_fallback
+Date:		April 2008
+KernelVersion:	2.6.26
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The order_fallback file shows how many times an allocation of a
+		new slab has not been possible at the cache's order and instead
+		fallen back to its minimum possible order.  It can be written to
+		clear the current count.
+		Available when CONFIG_SLUB_STATS is enabled.
+		order_fallback文件显示了在缓存的order上不可能分配新的slab的次数，而是降低到最小可能的order。
+		可以写入清除当前计数。启用CONFIG_SLUB_STATS时可用。
+
+What:		/sys/kernel/slab/cache/partial
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The partial file is read-only and displays how long many
+		partial slabs there are and how long each node's list is.
+		partial文件是只读的，显示多个部分slab的长度以及每个节点的list的长度。
+
+What:		/sys/kernel/slab/cache/poison
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The poison file specifies whether objects should be poisoned
+		when a new slab is allocated.
+		poison文件指定在分配新的slab时是否应该poison对象。
+
+What:		/sys/kernel/slab/cache/reclaim_account
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The reclaim_account file specifies whether the cache's objects
+		are reclaimable (and grouped by their mobility).
+		reclaim_account文件指定缓存的对象是否可回收（并通过其移动性进行分组）。
+
+What:		/sys/kernel/slab/cache/red_zone
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The red_zone file specifies whether the cache's objects are red
+		zoned.
+		红色区域文件指定缓存对象是否为red_zone。
+
+What:		/sys/kernel/slab/cache/remote_node_defrag_ratio
+Date:		January 2008
+KernelVersion:	2.6.25
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The file remote_node_defrag_ratio specifies the percentage of
+		times SLUB will attempt to refill the cpu slab with a partial
+		slab from a remote node as opposed to allocating a new slab on
+		the local node.  This reduces the amount of wasted memory over
+		the entire system but can be expensive.
+		Available when CONFIG_NUMA is enabled.
+		remote_node_defrag_ratio文件指定SLUB将尝试从远程节点向部分slab重新填充cpu slab的次数所占的百分比，
+		而不是在本地节点上分配新的slab。这减少了整个系统内存浪费的量，但代价可能更昂贵。
+		启用CONFIG_NUMA时可用。
+
+What:		/sys/kernel/slab/cache/sanity_checks
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The sanity_checks file specifies whether expensive checks
+		should be performed on free and, at minimum, enables double free
+		checks.  Caches that enable sanity_checks cannot be merged with
+		caches that do not.
+		sanity_checks文件指定是否应该免费执行昂贵的检查，并且至少允许双重检查。启用sanity_checks的缓存不能与没有缓存的缓存合并。
+
+What:		/sys/kernel/slab/cache/shrink
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The shrink file is written when memory should be reclaimed from
+		a cache.  Empty partial slabs are freed and the partial list is
+		sorted so the slabs with the fewest available objects are used
+		first.
+		当内存应从缓存中回收时，shrink文件被写入。空部分slab被释放，partial list被排序，所以首先使用具有最少可用对象的slab。
+
+What:		/sys/kernel/slab/cache/slab_size
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The slab_size file is read-only and specifies the object size
+		with metadata (debugging information and alignment) in bytes.
+		slab_size文件是只读的，并以字节为单位指定具有元数据（调试信息和对齐方式）的对象大小。
+
+What:		/sys/kernel/slab/cache/slabs
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The slabs file is read-only and displays how long many slabs
+		there are (both cpu and partial) and from which nodes they are
+		from.
+		slabs文件是只读的，显示了许多slab（包括cpu和partial）以及它们来自哪个节点的时间。
+
+What:		/sys/kernel/slab/cache/store_user
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The store_user file specifies whether the location of
+		allocation or free should be tracked for a cache.
+		store_user文件指定是否应为缓存跟踪分配位置或空闲位置。
+
+What:		/sys/kernel/slab/cache/total_objects
+Date:		April 2008
+KernelVersion:	2.6.26
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The total_objects file is read-only and displays how many total
+		objects a cache has and from which nodes they are from.
+		total_objects文件是只读的，并显示高速缓存具有多少个对象以及从哪个节点。
+
+What:		/sys/kernel/slab/cache/trace
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		The trace file specifies whether object allocations and frees
+		should be traced.
+		trace文件指定是否跟踪对象分配和释放。
+
+What:		/sys/kernel/slab/cache/validate
+Date:		May 2007
+KernelVersion:	2.6.22
+Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+		Christoph Lameter <cl@linux-foundation.org>
+Description:
+		Writing to the validate file causes SLUB to traverse all of its
+		cache's objects and check the validity of metadata.
+		写入validate文件会导致SLUB遍历其所有缓存的对象并检查元数据的有效性。

@@ -1,0 +1,52 @@
+首先，介绍一个网上流传的yahoo公司的曾经一个用于收集硬件信息的脚本，你可以在这里查看和下载hwconfig。它在我的某系统上执行的情况如下：
+[root@jay-linux test-programs]# ./hwconfig 
+Summary:        QCI QSSC-S4R, 1 x 000 2.27GHz, 47.1GB / 48GB 1067MHz DDR3
+System:         QCI QSSC-S4R
+Processors:     1 (of 4) x 000 2.27GHz 133MHz FSB (HT enabled, 10 cores, 80 threads)
+Memory:         47.1GB / 48GB 1067MHz DDR3 == 12 x 4GB, 52 x empty
+Disk:           sda (host4): 1.0TB (44%) JBOD == 1 x WDC-WD1002FAEX-00Z3A0
+Disk-Control:   host0:  
+Disk-Control:   host1:  
+Disk-Control:   host2:  
+Disk-Control:   host3:  
+Disk-Control:   host4:  
+Disk-Control:   host5:  
+Network:        eth7 (igb): 60:eb:69:21:29:b7, 1000Mb/s <full-duplex>
+Network:        eth8 (igb): 60:eb:69:21:29:b4, no carrier
+Network:        eth9 (igb): 60:eb:69:21:29:b6, no carrier
+Network:        eth10 (igb): 60:eb:69:21:29:b5, no carrier
+OS:             RHEL Server 6.3 (Santiago), Linux 3.5.0-rc6+ x86_64, 64-bit
+BIOS:           Intel QSSC-S4R.QCI.01.00.W008.111120102041 11/11/2010
+Hostname:       jay-linux
+
+这个脚本非常不错，强烈推荐大家使用！唯一的缺点是，硬件日新月异，这个脚本目前没有找到最近的更新，可能最新的部分硬件在脚本中可能没有提到。
+
+由于经常在Linux系统底层，有时与硬件也密切相关，所以收集了如下的Linux命令查看系统的硬件信息。这些命令在我的RHEL6.3系统上被测试和使用过。
+
+查看CPU信息：cat /proc/cpuinfo
+查看内存信息：cat /proc/meminfo
+
+查看板卡信息：cat /proc/pci
+查看PCI信息：lspci (相比cat /proc/pci更直观）
+
+查看USB设备：lsusb
+查看键盘和鼠标:cat /proc/bus/input/devices
+
+查看系统硬盘信息和使用情况：fdisk -l 和 df -h
+
+查看各设备的中断请求(IRQ):cat /proc/interrupts
+
+查看系统体系结构和kernel版本：uname -a
+
+查看硬件信息，包括bios、cpu、内存等信息：dmidecode
+
+查看硬件信息/kernel的打印信息：dmesg | less
+
+对于proc文件系统(/proc/）中，有很多记录着系统的特定信息：
+cpuinfo 主机CPU信息
+dma 主机DMA通道信息
+filesystems 文件系统信息
+interrupts 主机中断信息
+ioprots 主机I/O端口号信息
+meminfo 主机内存信息
+version Linux内存版本信息
